@@ -1,0 +1,244 @@
+package bigData;
+
+import java.util.Scanner;
+
+public class Express1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("请输入有效的运算表达式:");
+		Scanner scan = new Scanner(System.in);
+		String express = scan.nextLine();
+		int pos1 = express.indexOf("("); // （的位置
+		String operCode = express.substring(0, pos1); // 不包含pos1
+		String sNum1, sNum2;
+		int num1, num2 = 0;
+		if (operCode.equals("doubleMe")) { // 只有一个操作数
+
+			int pos3 = express.indexOf(")");
+			sNum1 = express.substring(pos1 + 1, pos3);
+			num1 = Integer.parseInt(sNum1);
+
+		} else { // 有两个操作数
+			int pos2 = express.indexOf(",");
+			int pos3 = express.indexOf(")");
+			sNum1 = express.substring(pos1 + 1, pos2);
+			sNum2 = express.substring(pos2 + 1, pos3);
+			num1 = Integer.parseInt(sNum1);
+			num2 = Integer.parseInt(sNum2);
+		}
+
+		int result = 0;
+		switch (operCode) {
+		case "add":
+			result = num1 + num2;
+			break;
+		case "sub":
+			result = num1 - num2;
+			break;
+		case "max":
+			result = num1 > num2 ? num1 : num2;
+			break;
+		case "min":
+			result = num1 < num2 ? num1 : num2;
+			break;
+		case "doubleMe":
+			result = num1 * 2;
+			break;
+		default:
+			System.out.println("该运算暂不支持！");
+
+		}
+
+		System.out.println(express + "=" + result);
+
+	}
+
+
+vpackage bigData.week13.file;
+
+import java.util.ArrayList;
+
+public class Driver {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<Express> list = ExpressDao.readFromFile("c:/question.txt");
+		
+		ArrayList<Express> list2= ExpressDao.process(list);
+		
+		ExpressDao.writeToFile(list2,"c:/answer.txt");
+		
+
+	}
+
+
+
+
+package bigData.week13.file;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+
+
+public class ExpressDao {
+	public static ArrayList<Express> readFromFile(String fileName) {
+		ArrayList<Express> list = new ArrayList<Express>();
+		try {
+			File file = new File(fileName);
+			FileReader read = new FileReader(file);
+			BufferedReader br = new BufferedReader(read);
+			String info = "";
+			while ((info = br.readLine()) != null) {
+				int pos1 = info.indexOf("("); // （的位置
+				String code = info.substring(0, pos1); // 不包含pos1
+				String sNum1, sNum2;
+				int num1, num2 = 0;
+
+				Express express;
+
+				if (code.equals("doubleMe")) { // 只有一个操作数
+
+					int pos3 = info.indexOf(")");
+					sNum1 = info.substring(pos1 + 1, pos3);
+					express = new Express(code, Float.parseFloat(sNum1));
+
+				} else { // 有两个操作数
+					int pos2 = info.indexOf(",");
+					int pos3 = info.indexOf(")");
+					sNum1 = info.substring(pos1 + 1, pos2);
+					sNum2 = info.substring(pos2 + 1, pos3);
+					express = new Express(code, Float.parseFloat(sNum1), Float.parseFloat(sNum2));
+
+				}
+				list.add(express);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+
+		return list;
+
+	}
+
+	public static ArrayList<Express> process(ArrayList<Express> list) {
+		ArrayList<Express> list2 = new ArrayList<Express>();
+
+		return list2;
+	}
+
+	public static void writeToFile(ArrayList<Express> list, String fileName) {
+
+	}
+
+
+
+
+
+
+package bigData.week13.file;
+
+public class Express {
+	private String code;
+	private float num1;
+	private float num2;
+	private float result;
+	public Express() {
+		super();
+	}
+	public Express(String code, float num1, float num2) {
+		super();
+		this.code = code;
+		this.num1 = num1;
+		this.num2 = num2;
+	}
+	public Express(String code, float num1) {
+		super();
+		this.code = code;
+		this.num1 = num1;
+	}
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
+	public float getNum1() {
+		return num1;
+	}
+	public void setNum1(float num1) {
+		this.num1 = num1;
+	}
+	public float getNum2() {
+		return num2;
+	}
+	public void setNum2(float num2) {
+		this.num2 = num2;
+	}
+	public float getResult() {
+		return result;
+	}
+	public void setResult(float result) {
+		this.result = result;
+	}
+	
+	public String toString1() {
+		return code+"("+num1+","+num2+")="+result;
+	}
+	
+	
+	public String toString2() {
+		return code+"("+num1+")="+result;
+	}
+	
+	
+	public void cal(){
+		switch (code) {
+		case "add":
+			result = num1 + num2;
+			break;
+		case "sub":
+			result = num1 - num2;
+			break;
+		case "max":
+			result = num1 > num2 ? num1 : num2;
+			break;
+		case "min":
+			result = num1 < num2 ? num1 : num2;
+			break;
+		case "doubleMe":
+			result = num1 * 2;
+			break;
+		default:
+			System.out.println("该运算暂不支持！");
+
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+}
+
+
+}
+
+
+}
+
+
+}
