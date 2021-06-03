@@ -1,0 +1,202 @@
+package Driver;
+
+import java.util.ArrayList;
+
+import week.dao.StudentDao;
+import week.vo.Result;
+import week.vo.Student;
+
+public class Driver {
+
+	public static void main(String[] args) {
+		
+		// TODO Auto-generated method stub
+
+		StudentDao dao =new  StudentDao();
+		
+		ArrayList<Student> list= StudentDao.input();
+		int total =dao.count(list);
+		int maleCount =dao.countByGender(list, "nan");
+		int femaleCount =dao.countByGender(list, "nv");
+		ArrayList<Result> listResult = dao.statis(list);
+		
+		System.out.println(total);
+		System.out.println(maleCount);
+		System.out.println(femaleCount);
+for(Result result:listResult){
+	System.out.println(result.toString());
+}
+		
+	}
+
+}
+package week.vo;
+
+public class Result {
+	
+	private String province;
+	private int count;
+	private String name;
+	public Result(String province, int count, String name) {
+		super();
+		this.province = province;
+		this.count = count;
+		this.name = name;
+	}
+	public Result() {
+		super();
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "Result [province=" + province + ", count=" + count + ", name=" + name + "]";
+	}
+package week.vo;
+
+public class Student {
+	private String id;
+	private String name;
+	private String gender;
+	private String province;
+	public Student() {
+		super();
+	}
+	public Student(String id, String name, String gender, String province) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.gender = gender;
+		this.province = province;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getProvince() {
+		return province;
+	}
+	public void setProvince(String province) {
+		this.province = province;
+	}
+	@Override
+	public String toString() {
+		return "Student [id=" + id + ", name=" + name + ", gender=" + gender + ", province=" + province + "]";
+	}
+	
+	
+
+}
+package week.dao;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+import week.vo.Result;
+import week.vo.Student;
+
+public class StudentDao {
+
+	public static ArrayList<Student> input(){
+		ArrayList<Student> list =new ArrayList<Student>();
+		Scanner scan = new Scanner(System.in);
+		String date ="";
+		while(!(date= scan.nextLine()).equals("end")){
+			String Array[] = date.split(",|.");
+			Student student = new Student(Array[0],Array[1],Array[2],Array[3]);
+			list.add(student);
+		}
+		return list;
+	}
+	public int count(ArrayList<Student> list){
+		int num= 0;
+		num = list.size();
+		return num;
+	}
+	
+	public int countByGender(ArrayList<Student> list,String gender){
+		int num = 0;
+		for (Student student : list) {
+			if(student.getGender().equals(gender)){
+				num++;
+			}
+			
+		}
+		return num;
+	}
+	
+public ArrayList<Result> statis(ArrayList<Student> list){
+	ArrayList<Result> listResult = new ArrayList<Result>();
+	for (Student  student : list) {
+		String province = student.getProvince();
+		int index = query(listResult,province);
+		if(index!=-1){
+			Result resultTemp = listResult.get(index);
+			resultTemp.setCount(resultTemp.getCount() +1);
+			resultTemp.setName(resultTemp.getName()+","+student.getName());
+			listResult.set(index, resultTemp);
+		}
+		else{
+			Result result = new Result();
+			result.setProvince(province);
+			result.setCount(1);
+			result.setName(student.getName());
+			listResult.add(result);
+		}
+		
+	}
+	
+	
+	
+	return listResult;
+	
+	
+}
+	public int query(ArrayList<Result> listResult,String province){
+		int ret =-1;
+		
+		for(int i=0;i<listResult.size();i++){
+			Result result = listResult.get(i);
+			if(result.getProvince().equals(province)){
+				ret =i;
+				break;
+			}
+			
+				
+		}
+		return ret;
+	}
+}
+	
+	
+}
