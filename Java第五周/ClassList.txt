@@ -1,0 +1,249 @@
+package work5;
+public class ClassList {
+	//成员
+	private int semester;
+	private int year;
+	private Subject subj;
+	private Student s1;
+	private Student s2;
+	
+	//输入
+	public ClassList(int year,
+			int semester,
+			Subject subj,
+			Student s1,
+			Student s2) {
+		
+		this.year = year;
+		this.semester =semester;
+		this.subj = subj;
+		this.s1 = s1;
+		this.s2 = s2;
+	}
+	
+	//get & set
+	public int getSemester() {
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		this.semester = semester;
+	}
+
+	public int getYear() {
+		return year;
+	}
+
+	public void setYear(int year) {
+		this.year = year;
+	}
+
+	public Subject getSubj() {
+		return subj;
+	}
+
+	public void setSubj(Subject subj) {
+		this.subj = subj;
+	}
+
+	public Student getS1() {
+		return s1;
+	}
+
+	public void setS1(Student s1) {
+		this.s1 = s1;
+	}
+
+	public Student getS2() {
+		return s2;
+	}
+
+	public void setS2(Student s2) {
+		this.s2 = s2;
+	}
+	
+	//打印信息
+	public String toString() {
+		String output ="";
+		output +=this.year +"学年";
+		output +="第" + this.semester +"学期\n";
+		output +=this.subj.toString();
+		output +="学号\t姓名";
+		output +="\n=======================\n";
+		output +=this.s1.toString();
+		output +=this.s2.toString();
+		return output;
+	}
+}
+
+
+###Driver#####
+package work5;
+
+import java.util.Scanner;
+
+public class Driver {
+	public static ClassList cl = null;
+	
+	public static void main(String[] args) {
+		Scanner scan = new Scanner(System.in);
+		int choose = menu();
+		while(choose!=3) {
+			switch(choose) {
+			case 1:
+				String a;
+				if(cl != null) {
+					System.out.print("课程已经创建，是否重新创建(y/n):");
+					a = scan.next();
+					if(a.equals("n"))  // 比较字符串用。equals()函数
+						break;
+				}
+				createList();
+				break;
+			case 2:
+				if(cl == null) {
+					System.out.println("请先执行1,再执行此功能！\n");
+					break;
+				}
+				printall();
+				break;
+			default :System.out.println("输入无效，请重新输入！");
+			}
+			
+			choose = menu();
+		}
+		System.out.println("成功退出系统，欢迎下次使用！");
+		
+	}
+	
+	public static int menu() {
+		int choose = 0;
+		System.out.println("====WTU课程管理系统====");
+		System.out.println("1.Create List");
+		System.out.println("2.Print List");
+		System.out.println("3.Exit");
+		System.out.print("please choose(1-2):");
+		Scanner scan = new Scanner(System.in);
+		choose = scan.nextInt();
+		return choose;
+		
+	}
+	
+	public static void createList() {
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.print("请输入学年：");
+		int year = scan.nextInt();
+		System.out.print("请输入学期(1-2):");
+		int semester = scan.nextInt();
+		
+		System.out.print("请输入课程代码：");
+		String subjectID = scan.next();
+		System.out.print("请输入课程名称：");
+		String subjectName = scan.next();
+		
+		System.out.print("请输入学生1学号：");
+		String studentID1 = scan.next();
+		System.out.print("请输入学生1姓名：");
+		String studentName1 = scan.next();
+		System.out.print("请输入学生2学号：");
+		String studentID2 = scan.next();
+		System.out.print("请输入学生2姓名：");
+		String studentName2 = scan.next();
+		
+		Subject sub = new Subject(subjectID,subjectName);
+		Student stu1 = new Student(studentID1,studentName1);
+		Student stu2 = new Student(studentID2,studentName2);
+		
+		cl =new ClassList(year,semester,sub,stu1,stu2);
+	}
+	
+	public static void printall() {
+		System.out.println(cl.toString());
+	}
+	
+}
+#####student#####
+package work5;
+
+public class Student {
+	
+	private String studentID;
+	private String studetName;
+	
+	
+	public Student(String studentID,String studetName) {
+		this.studentID = studentID;
+		this.studetName = studetName;
+	}
+	
+	//get and set 
+	public String getStudentID() {
+		return this.studentID;
+	}
+	
+	public void setStudentID(String studentID) {
+		this.studentID = studentID;
+	}
+
+	public String getStudetName() {
+		return studetName;
+	}
+
+	public void setStudetName(String studetName) {
+		this.studetName = studetName;
+	}
+	
+	
+	public String toString() {
+		String output = "";
+		output += this.studentID;
+		output += "\t" + this.studetName +"\n";
+		return output;
+	}
+
+}
+
+
+
+
+#####Subject#####
+package work5;
+
+public class Subject {
+	//成员
+	private String subjectID;
+	private String subjectName;
+	
+	//输入
+	public Subject(String subjectID,String subjectName) {
+		this.subjectID = subjectID;
+		this.subjectName = subjectName;
+	}
+	
+	//get & set
+	public String getSubjectID() {
+		return subjectID;
+	}
+
+	public void setSubjectID(String subjectID) {
+		this.subjectID = subjectID;
+	}
+
+	public String getSubjectName() {
+		return subjectName;
+	}
+
+	public void setSubjectName(String subjectName) {
+		this.subjectName = subjectName;
+	}
+	
+	//打印信息
+	public String toString() {
+		String output ="";
+		output += "课程代码：" + this.subjectID+"\t";
+		output += "课程名称：" +this.subjectName+"\n";
+		
+		return output;
+	}
+}
