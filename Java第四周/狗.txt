@@ -1,0 +1,31 @@
+package JavaTest;
+
+public class Week4_Dog {
+	private String name;
+	private String colour;
+	private String age;
+
+	public Week4_Dog() {
+		this.name = "null";
+		this.colour = "white";
+		this.age = "0";
+	}
+
+	public Week4_Dog(String name, String colour, String age) {
+		this.name = name;
+		this.colour = colour;
+		this.age = age;
+	}
+
+	public void getMessage(String name, String colour, String age) {
+		this.name = name;
+		this.colour = colour;
+		this.age = age;
+	}
+
+	public void display() {
+		String info = "";
+		info = "狗姓名：" + this.name + "    颜色：" + this.colour + "    年龄：" + this.age;
+		System.out.println(info);
+	}
+}
