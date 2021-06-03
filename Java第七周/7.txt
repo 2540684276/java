@@ -1,0 +1,264 @@
+###Driver#####
+
+package work;
+
+import java.util.Scanner;
+
+public class Driver {
+	public static Scanner scan = new Scanner(System.in);
+	public static Enrollment enrollment;
+
+	public static void main(String[] args) {
+		int choose = menu();
+		while (choose != 5) {
+			switch (choose) {
+			case 1:
+				if (enrollment != null) {
+					System.out.print("课程已存在，是否重新创建(y/n):");
+					String c = scan.next();
+					if (c.equals("n")) {
+						break;
+					}
+				}
+				System.out.print("请依次输入课程id:");
+				String subId = scan.next();
+				System.out.print("请依次输入课程名称:");
+				String subName = scan.next();
+				System.out.print("请依次输入课程人数:");
+				int subNum = scan.nextInt();
+				Subject subject = new Subject(subId, subName, subNum);
+				enrollment = new Enrollment(subject);
+				System.out.println("创建课程成功，信息如下:");
+
+				enrollment.print();
+				break;
+			case 2:
+				if (enrollment == null) {
+					System.out.println("请先创建课程，再执行此功能！");
+					break;
+				}
+				if (enrollment.getStuCount() >= enrollment.getStu().length) {
+					System.out.println("以达到最大人数，不能再选！");
+					break;
+				}
+				System.out.print("请输入选课学生的id:");
+				String id = scan.next();
+				System.out.print("请输入选课学生的姓名:");
+				String name = scan.next();
+				Student student = new Student(id, name);
+				enrollment.chooseClass(student);
+				System.out.println("恭喜你，选课成功！\n目前选课情况如下:");
+				System.out.println(enrollment.toString());
+				break;
+			case 3:
+				System.out.print("请输入推选学生的id:");
+				String ID = scan.next();
+				if (enrollment.chooseExit(ID)) {
+					System.out.println("退选成功！新的选课信息如下:");
+					System.out.println(enrollment.toString());
+				} else {
+					System.out.println("学号为" + ID + "的学生并没有选课！");
+				}
+				break;
+			case 4:
+				System.out.println(enrollment.toString());
+				break;
+			default:
+				System.out.println("输入错误，请重新输入！");
+			}
+			choose = menu();
+		}
+		System.out.println("退出成功，欢迎下次使用！");
+	}
+
+
+	public static int menu() {
+		System.out.println("=====WTU选课系统=====");
+		System.out.println("1.创建课程");
+		System.out.println("2.选课");
+		System.out.println("3.退选");
+		System.out.println("4.打印名单");
+		System.out.println("5.退出");
+		System.out.print("请选择(1~5):");
+		int choose = scan.nextInt();
+		return choose;
+	}
+
+}
+
+package work;
+
+public class Student {
+	
+	private String id;
+	private String name;
+
+	
+	public Student(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	// toString
+	public String toString() {
+		String msg = "";
+		msg += this.id + "\t" + this.name;
+		return msg;
+	}
+}
+
+####Subject####
+package work;
+
+public class Student {
+	
+	private String id;
+	private String name;
+
+	
+	public Student(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
+	
+	public String getId() {
+		return this.id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String toString() {
+		String msg = "";
+		msg += this.id + "\t" + this.name;
+		return msg;
+	}
+}
+
+#####Enrollment#####
+package work;
+
+public class Enrollment {
+	
+	private Subject sub[]; /
+
+	private Student stu[];
+	private int stuCount; // 当前人数
+
+	// get & set
+	public Subject[] getSub() {
+		return sub;
+	}
+
+	public void setSub(Subject sub[]) {
+		this.sub = sub;
+	}
+
+	public Student[] getStu() {
+		return stu;
+	}
+
+	public void setStu(Student[] stu) {
+		this.stu = stu;
+	}
+
+	public int getStuCount() {
+		return stuCount;
+	}
+
+	public void setStuCount(int stuCount) {
+		this.stuCount = stuCount;
+	}
+
+	// 构造
+	public Enrollment(Subject subject) {
+		this.sub = new Subject[1];
+		this.sub[0] = subject;
+
+
+		this.stu = new Student[subject.getcNumber()]; // 学生最大数量
+		this.stuCount = 0; // 计数,当前为0人
+	}
+
+
+	public void chooseClass(Student student) {
+		stu[stuCount] = student;
+		
+
+		stuCount++;
+	}
+
+	
+	public boolean chooseExit(String id) {
+		if (stuCount <= 0) {
+			return false;
+		}
+		int i;
+		boolean ok = false;
+		for (i = 0; i < stuCount; i++) { // 寻找是否有这个学生
+			if (stu[i].getId().equals(id)) {
+				ok = true;
+				break;
+			}
+		}
+		if (ok) {
+			stu[i] = null;
+			for (int j = i; j < stuCount - 1; j++) {
+				stu[j] = stu[j + 1];
+			}
+			stuCount--;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	
+	public void print() {
+		String msg = "";
+		msg += "课程id:" + sub[0].getcId() + ", 课程名称:" + sub[0].getcName() + ", 最大人数:" + sub[0].getcNumber();
+		System.out.println(msg);
+	}
+
+	public String toString() {
+		String msg = "";
+		msg += sub[0].toString() + "\n";
+		msg += "选课人数" + this.stuCount + "\n";
+		msg += "学号" + "\t" + "姓名\n";
+		for (int i = 0; i < this.stuCount; i++) {
+			msg += stu[i].toString() + "\n";
+		}
+		return msg;
+	}
+
+}
