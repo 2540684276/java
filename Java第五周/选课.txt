@@ -1,0 +1,470 @@
+package hh;
+
+public class Employee {
+	private String name;
+	private String id;
+	private String department;
+	private float salary;
+	
+	public Employee(){
+		
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(String department) {
+		this.department = department;
+	}
+
+	public float getSalary() {
+		return salary;
+	}
+
+	public void setSalary(float salary) {
+		this.salary = salary;
+	}
+
+	public Employee(String name,String id,String dep,float salary,float x){
+		
+	}
+	
+	public Employee(String name, String id, String department, float salary) {
+		super();
+		this.name = name;
+		this.id = id;
+		this.department = department;
+		this.salary = salary;
+	}
+package Main;
+
+public class Student {
+	private String id;
+	private String name;
+	public Student(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return id + "\t" + name;
+	}
+	
+}
+
+
+
+package Main;
+
+public class Subject {
+	private String id;
+	private String name;
+	public Subject(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return id + "\t" + name;
+	}
+}
+
+
+
+package Main;
+
+public class Enroll {
+	private int year;
+	private int semester;
+	private int count;
+	private Subject subj;
+	private Student stus[];
+	
+	public Enroll(int year, int semester, Subject subj, int max){
+		this.year = year;
+		this.semester = semester;
+		this.subj = subj;
+		stus = new Student[max];
+	}
+	public boolean add(Student stu){
+		if(stu == null){
+			return false;
+		}
+		else if(count >= stus.length){
+			return false;
+		}
+		stus[count] = stu;
+		count++;
+		return true;
+	}
+	public Student get(int index){
+		return stus[index];
+	}
+	public int size(){
+		return this.count;
+	}
+	public int indexOf(String id){
+		for(int i = 0; i < this.count; i++){
+			if(stus[i].getId().equals(id)){
+				return i;
+			}
+		}
+		return -1;
+	}
+	public String toString(){
+		String info = "";
+		info = "学年" + this.year + "，学期" + this.semester + "\n";
+		info = info + this.subj.toString() + "\n" + "总人数" + this.size() + "\n";
+		info = info + "序号\t学号\t姓名" + "\n";
+		for(int i = 0; i < count; i++){
+			info = info + (i + 1) + "\t" + stus[i].toString() + "\n";
+		}
+		return info;
+	}
+}
+
+
+
+package Main;
+
+import java.util.Scanner;
+
+public class Driver {
+
+	private static Enroll enroll = null;
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub	
+		int choice = menu();
+		while(choice != 4){
+			switch(choice){
+			case 1:
+				create();
+				break;
+			case 2:
+				add();
+				break;
+			case 3:
+				print();
+				break;
+			default:
+				System.out.println("选择无效");
+				break;
+			}
+			choice = menu();
+		}
+		System.out.println("欢迎下次使用");
+		
+	}
+	public static int menu(){
+		int choice = 0;
+		System.out.println("欢迎使用WTU课程管理系统");
+		System.out.println("1.创建课程");
+		System.out.println("2.学生选课");
+		System.out.println("3.打印名单");
+		System.out.println("4.退出系统");
+		System.out.print("请选择：(1-4)");
+		
+		Scanner scan = new Scanner(System.in);
+		choice = scan.nextInt();
+		return choice;
+	}
+	public static void create(){
+		Scanner scan = new Scanner(System.in);
+		if(enroll != null){
+			System.out.println("课程已创建，是否新建课程？(y/n)");
+			String choice = scan.next();
+			if(choice.equalsIgnoreCase("n")){
+				return;
+			}
+		}
+		System.out.println("输入课程编号");
+		String subjid = scan.next();
+		System.out.println("输入课程名称");
+		String subjname = scan.next();
+		
+		Subject subj = new Subject(subjid, subjname);
+		System.out.println("请输入学年");
+		System.out.println("请输入学期");
+		System.out.println("请输入最大人数");
+		int year = scan.nextInt();
+		int semester = scan.nextInt();
+		int max = scan.nextInt();
+		enroll = new Enroll(year, semester, subj, max);
+		System.out.println("创建成功，信息如下");
+		System.out.println(subj.toString());
+		System.out.println("学年" + year + "\t学期" + semester + "\t最大人数" + max);
+	}
+	public static void add(){
+		if(enroll == null){
+			System.out.println("请先创建课程再执行该功能！");
+			return;
+		}
+		Scanner scan = new Scanner(System.in);
+		System.out.println("请输入学号");
+		String stuid = scan.next();
+		if(enroll.indexOf(stuid) >= 0){
+			System.out.println("学号已存在");
+			return;
+		}
+		System.out.println("请输入姓名");
+		String stuname = scan.next();
+		Student stu = new Student(stuid, stuname);
+		if(enroll.add(stu)){
+			System.out.println("选课成功");
+			System.out.println("当前选课人数" + enroll.size());
+		}
+		else{
+			System.out.println("选课失败");
+		}
+	}
+	public static void print(){
+		if(enroll == null){
+			System.out.println("请先创建课程再执行该功能！");
+			return;
+		}
+		System.out.println(enroll.toString());
+	}
+}
+
+
+
+
+
+
+
+package Student;
+
+public class Student {
+	private String id;
+	private String name;
+	public Student(){
+		super();
+	}
+	public Student(String id,String name){
+		super();
+		this.id=name;
+		this.name=name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return id+"\t"+name;
+	}
+
+}
+
+package Student;
+
+public class Subject {
+	private String id;
+	private String name;
+	public Subject(){
+		super();
+	}
+	public Subject(String id,String name){
+		super();
+		this.id=name;
+		this.name=name;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	@Override
+	public String toString() {
+		return "课程代码："+id+"课程名称：";
+	}
+
+
+}
+
+package Student;
+
+public class Enroll {
+	private int year;
+	private int semester;
+	
+	private Subject subj;
+	private Student stus[];
+	private int count;
+	
+	public Enroll(int year,int semester,Subject subj,int max){
+		this.year = year;
+		this.semester = semester;
+		this.subj = subj;
+		stus = new Student[max];
+	}
+	
+	public boolean add(Student stu){
+		if(stu ==null){
+			return false;
+		}
+		if(count>=stus.length){
+			return false;
+		}
+		stus[count]=stu;
+		count++;
+		return true;
+		
+	}
+	public Student get(int index){
+		return stus[index];
+	}
+	public int size(){
+		return this.count;
+	}
+	public int indexof(String id){
+		for(int i=0;i<this.count;i++){
+			if(stus[i].getId().equals(id)){
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public String toString(){
+		String info="";
+		info="学年："+this.year+",学期"+this.semester+"\n";
+		info = info+this.subj.toString()+"\n";
+		info = info+"序号\t学号\t姓名"+"\n";
+		info = info +"==================\n";
+		
+		for(int i=0;i<count;i++){
+			info= info+(i+1)+"\t"+stus[i].toString()+"\n";
+		}
+		info = info+"选课人数："+this.count;
+		return info;
+	}
+	 
+
+}
+package Student;
+
+import java.util.Scanner;
+
+public class Driver {
+	private static Enroll enroll=null;
+	public static void main(String[] args){
+		int Choice= menu();
+		while(choice!=4){
+			switch(choice){
+			case 1:create();break;
+			case 2:add();break;
+			case 3:print();break;
+			default:System.out.println("选择无效");break;
+			}
+			choice = menu();
+		}
+		System.out.println("bye");
+	}
+	public static void creat(){
+		Scanner scan = new Scanner(System.in);
+		if(enroll!=null{
+			System.out.println("选可以创建，是否新建创建？(y/n):");
+			String choice = scan.nextLine();
+			if(choice.equalsIgnoreCase("n")){
+				return;
+			}
+		}
+		System.out.println("请输入课程代码：");
+		String subjectid = scan.nextLine();
+		System.out.print("请输入课程名称：");
+		String subjectname = scan.nextLine();
+		Subject subj=new Subject(subjectid,subjectname);
+		System.out.print("请输入学年：");
+		int year=scan.nextInt();
+		System.out.print("请输入最大人数：");
+		int max= scan.nextInt();
+		enroll = new Enroll(year,semester,subj,max);
+		System.out.println("选课创建成功！以下是信息");
+		System.out.println("学年："+year+"，学期"+semester+",最大人数:"+max);
+			
+	}
+	public static void add(){
+		if(enroll ==null){
+			System.out.println("请先创建选课在执行该功能");
+			return;
+		}
+		Scanner scan = new Scanner(System.in);
+		System.out.println("请输入学号：");
+		String stuId = scan.nextLine();
+		if(enroll.indexof(stuId)>=0){
+			System.out.println("学号"+stuId+"已存在！不能再选");
+			return;
+		}
+		
+		
+	}
+
+}
+
+
+
+
+
+
+
+
