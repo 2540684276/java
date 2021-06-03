@@ -1,0 +1,60 @@
+package week1;
+
+import java.util.Scanner;
+
+public class b {
+	public static void main (String args[]) {
+		double a, b, q1, q2, q3, num = 0;//图片的长度和宽度,q1==1是精美类型，q1==0是普通类型
+		
+		double c, s;
+		
+		double price1 = 0;
+		
+		Scanner scan=new Scanner(System.in);
+		
+		System.out.println("长：");
+		a = scan.nextDouble();
+		System.out.println("宽：");
+		b = scan.nextDouble();
+		System.out.println("要精美类型吗(1/0)：");
+		q1 = scan.nextDouble();
+		System.out.println("要上色吗(1/0)：");
+		q2 = scan.nextDouble();
+		System.out.println("要加皇冠吗(1/0)：");
+		q3 = scan.nextDouble();
+		if(q3 == 1)
+		{
+			System.out.println("加几个皇冠：");
+			num = scan.nextDouble();
+		}
+		
+		c = 2*(a + b);
+		s = a *b;
+		
+		if(q1 == 1)
+		{
+			price1 = c * 0.25 + 0.09 * s;
+		}
+		
+		if(q1 == 0)
+		{
+			price1 = c * 0.15 + 0.09 * s;
+		}
+		
+		if(q2 == 1)
+		{
+			price1 += 0.1*c;
+		}
+		
+		if(q3 == 1)
+		{
+			price1 += num * 0.35;
+		}
+		
+		
+		System.out.println("price:"+price1);
+		
+		
+	}
+
+}
