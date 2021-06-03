@@ -1,0 +1,209 @@
+######Product######
+package vo;
+
+public class Product {
+	private String sno;
+	private String name;
+	private int number;
+	private double price;
+	private double total;
+	public Product() {
+		
+	}
+	public Product(String sno, String name, int number, double price, double total) {
+		super();
+		this.sno = sno;
+		this.name = name;
+		this.number = number;
+		this.price = price;
+		this.total = total;
+	}
+	public String getSno() {
+		return sno;
+	}
+	public void setSno(String sno) {
+		this.sno = sno;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getNumber() {
+		return number;
+	}
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	public double getPrice() {
+		return price;
+	}
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public double getTotal() {
+		return total;
+	}
+	public void setTotal(double total) {
+		this.total = total;
+	}
+	@Override
+	public String toString() {
+		return sno + "\t" + name + "\t" + number + "\t" + price + "\t" + total;
+	}
+	
+	
+}
+
+
+
+
+
+
+######sale############
+package vo;
+
+public class Sale {
+	private int saleCount;    //销售笔数
+	private int saleNumber;   //销售数量
+	private double saleTotalMoney;  //销售总钱数
+	
+	public Sale() {
+
+	}
+	public Sale(int saleCount, int saleNumber, double saleTotalMoney) {
+		super();
+		this.saleCount = saleCount;
+		this.saleNumber = saleNumber;
+		this.saleTotalMoney = saleTotalMoney;
+	}
+	public int getSaleCount() {
+		return saleCount;
+	}
+	public void setSaleCount(int saleCount) {
+		this.saleCount = saleCount;
+	}
+	public int getSaleNumber() {
+		return saleNumber;
+	}
+	public void setSaleNumber(int saleNumber) {
+		this.saleNumber = saleNumber;
+	}
+	public double getSaleTotalMoney() {
+		return saleTotalMoney;
+	}
+	public void setSaleTotalMoney(double saleTotalMoney) {
+		this.saleTotalMoney = saleTotalMoney;
+	}
+	@Override
+	public String toString() {
+		return "销售笔数：" + saleCount + "\t销售件数：" + saleNumber + "\t销售总金额：" + saleTotalMoney;
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+#######Dao########
+package Dao;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Scanner;
+import vo.Sale;
+import vo.Product;
+
+public class ProductDao {
+	//1.输入
+	public ArrayList<Product> inputFromKeyBoard() {
+		ArrayList<Product> list = new ArrayList<Product>();
+		Scanner scan = new Scanner(System.in);
+		System.out.println("请输入最后一件商品的编号:");
+		String tail = scan.next();
+		String sno = generateNum(tail);
+		System.out.println("请输入商品的名称，数量和单价（以逗号分隔，名称以0000结束）");
+		String good = scan.next();
+		int Tail = Integer.parseInt(tail);
+		while(!good.equals("0000")) {
+			String array[] = good.split(",|，");
+			String name = array[0];
+			int number = Integer.parseInt(array[1]);
+			double price = Double.parseDouble(array[2]);
+			double total = number * price;
+			Product product = new Product(sno,name,number,price,total);
+			list.add(product);
+			good = scan.next();
+			Tail++;
+			sno = generateNum(String.valueOf(Tail));
+		}
+		return list;
+	}
+	
+	//2.处理
+	public Sale operate(ArrayList<Product> list) {
+		Sale sale = new Sale();
+		for (Product product : list) {
+			sale.setSaleNumber(sale.getSaleNumber() + product.getNumber());
+			sale.setSaleTotalMoney(sale.getSaleTotalMoney() + product.getTotal());
+		}
+		sale.setSaleCount(list.size());
+		return sale;
+	}
+	
+	//3.输出
+	
+	public void print(ArrayList<Product> list,Sale sale) {
+		String info = "";
+		info = "流水号\t\t" + "商品名称\t" + "商品数量\t" + "单价\t" + "总价";
+		System.out.println(info);
+		for (Product product : list) {
+			System.out.println(product.toString());
+		}
+		System.out.println(sale.toString());
+	}	
+	
+	public static String generateNum(String num) {
+		String sno = "";
+		String tail = "";
+		Date date = new Date();
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		String today = df.format(date);
+		int zeroNum = 4 - (String.valueOf(Integer.parseInt(num))).length();
+		for(int i=0;i<zeroNum;i++) {
+			tail += "0";
+		}
+		
+		sno = today + tail + (Integer.parseInt(num)+1);
+		
+		return sno;
+	}
+}
+######Driver########
+package Driver;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import Dao.ProductDao;
+import vo.Product;
+import vo.Sale;
+
+public class Driver {
+
+	public static void main(String[] args) {
+		
+		ProductDao dao = new ProductDao();
+		ArrayList<Product> list = dao.inputFromKeyBoard();
+		Sale sale = dao.operate(list);
+		dao.print(list,sale);
+		
+	}
+}
